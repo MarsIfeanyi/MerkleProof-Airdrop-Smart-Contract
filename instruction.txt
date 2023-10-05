@@ -1,0 +1,13 @@
+/ Use merkles to distribute tokens
+// you be needing an ERC20 token, CSV of address and the amount of token you are giving to them.
+// write a script that shows that someone in the CSV is eligible to claim the airdrop
+
+// you are writing a smart contract
+
+// Basically you are deploying a smart contract that distributes ERC20 tokens to people using merkle root
+
+
+
+https://github.com/merkle-voting/voting-contracts
+
+https://github.com/aavegotchi/merkle-airdrop/tree/master
