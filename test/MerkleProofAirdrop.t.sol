@@ -22,6 +22,7 @@ contract MerkleProofAirdropTest is Test {
 
     address user2 = 0x005FbBABD1e619324011d3312CF6166921A294aF;
     uint user2Amt = 47000000000000;
+
     Result public result;
 
     function setUp() public {
@@ -45,16 +46,33 @@ contract MerkleProofAirdropTest is Test {
         );
     }
 
-    //  test the user cannot claim twice (claim once , then claim again)
     function testUserCantClaimTwice() public {
         _claim();
-        vm.expectRevert("You have already claimed!");
+
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                MerkleProofAirdrop.AlreadyClaimed.selector,
+                "You have already claimed!"
+            )
+        );
         _claim();
     }
 
     function testClaim() public {
         bool success = _claim();
-        assertEq(merkleProofAirdrop.balanceOf(user1), user1Amt);
+        assertEq(merkleProofAirdrop.balanceOf(user2), user2Amt);
         assertTrue(success);
+    }
+
+    function testInvalidProofForUser() public {
+        bytes32[] memory proof_;
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                MerkleProofAirdrop.InvalidProofForUser.selector,
+                "MerkleDistributor: Invalid proof"
+            )
+        );
+
+        merkleProofAirdrop.claimAirdrop(proof_, user2, user2Amt);
     }
 }

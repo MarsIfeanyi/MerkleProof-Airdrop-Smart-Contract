@@ -3,6 +3,11 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
+/**
+ * @title MerkleProof For Airdrop Distribution
+ * @author Marcellus Ifeanyi
+ * @notice Uses MerkleProof to verify and disributes ERC20 token airdrop to only verified users.
+ */
 contract MerkleProofAirdrop is ERC20 {
     bytes32 merkleRoot;
 
@@ -14,8 +19,8 @@ contract MerkleProofAirdrop is ERC20 {
 
     event AirdropClaimed(address account, uint256 amount);
 
-    error MerkleProofAirdrop_AlreadyClaimed(string message);
-    error MerkleProofAirdrop_InvalidProof(string);
+    error AlreadyClaimed(string message);
+    error InvalidProofForUser(string);
 
     function claimAirdrop(
         bytes32[] calldata _merkleProof,
@@ -23,20 +28,16 @@ contract MerkleProofAirdrop is ERC20 {
         uint256 _amount
     ) external returns (bool success) {
         if (hasClaimed[claimer])
-            revert MerkleProofAirdrop_AlreadyClaimed({
-                message: "You have already claimed!"
-            });
+            revert AlreadyClaimed({message: "You have already claimed!"});
 
         bytes32 node = keccak256(abi.encodePacked(claimer, _amount));
 
         success = MerkleProof.verify(_merkleProof, merkleRoot, node);
 
         if (!success)
-            revert MerkleProofAirdrop_InvalidProof(
-                "MerkleDistributor: Invalid proof."
-            );
+            revert InvalidProofForUser("MerkleDistributor: Invalid proof");
 
-        _mint(claimer, _amount * 10 ** 18);
+        _mint(claimer, _amount);
         hasClaimed[claimer] = true;
 
         emit AirdropClaimed(claimer, _amount);

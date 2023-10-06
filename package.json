@@ -24,8 +24,9 @@
     "typechain": "^8.1.0",
     "typescript": ">=4.5.0",
     "keccak256": "^1.0.2",
-    "merkletreejs": "^0.2.13",
-    "csv-parser": "^3.0.0"
+    "csv-writer": "^1.6.0",
+    "merkletreejs": "^0.3.10",
+    "solmate": "^6.2.0"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.9.3",
